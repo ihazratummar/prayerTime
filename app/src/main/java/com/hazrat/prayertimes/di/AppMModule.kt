@@ -9,8 +9,11 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.hazrat.prayertimes.data.LocationDao
 import com.hazrat.prayertimes.data.LocationDatabase
+import com.hazrat.prayertimes.data.MethodDao
+import com.hazrat.prayertimes.data.MethodDatabase
 import com.hazrat.prayertimes.network.PrayerTimeApi
 import com.hazrat.prayertimes.repository.LocationRepository
+import com.hazrat.prayertimes.repository.MethodRepository
 import com.hazrat.prayertimes.repository.PrayerTimeRepository
 import com.hazrat.prayertimes.util.Constants.BASE_URL
 import dagger.Module
@@ -29,12 +32,12 @@ object AppMModule {
 
     @Singleton
     @Provides
-    fun providePrayerTimeRepository(api: PrayerTimeApi,locationRepository: LocationRepository)
-    = PrayerTimeRepository(api,locationRepository)
+    fun providePrayerTimeRepository(api: PrayerTimeApi, locationRepository: LocationRepository, methodRepository: MethodRepository) =
+        PrayerTimeRepository(api, locationRepository, methodRepository)
 
     @Singleton
     @Provides
-    fun providePrayerApi(): PrayerTimeApi{
+    fun providePrayerApi(): PrayerTimeApi {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -50,6 +53,17 @@ object AppMModule {
             context.applicationContext,
             LocationDatabase::class.java,
             "location_database"
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMethodDatabase(@ApplicationContext context: Context): MethodDatabase{
+        return Room.databaseBuilder(
+            context.applicationContext,
+            MethodDatabase::class.java,
+            "method_database"
         ).build()
     }
 
@@ -71,8 +85,22 @@ object AppMModule {
         fusedLocationProviderClient: FusedLocationProviderClient,
         locationDao: LocationDao
     ): LocationRepository {
-        return LocationRepository(context, fusedLocationProviderClient,locationDao)
+        return LocationRepository(context, fusedLocationProviderClient, locationDao)
     }
 
+
+    @Singleton
+    @Provides
+    fun provideMethodDao(methodDatabase: MethodDatabase): MethodDao {
+        return methodDatabase.methodDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideMethodRepository(
+        methodDao: MethodDao
+    ): MethodRepository{
+        return MethodRepository(methodDao)
+    }
 
 }

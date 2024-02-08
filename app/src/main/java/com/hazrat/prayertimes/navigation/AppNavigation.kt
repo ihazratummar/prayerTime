@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hazrat.prayertimes.screen.PrayerTimeViewModel
 import com.hazrat.prayertimes.screen.PrayerTimer
 import com.hazrat.prayertimes.screen.UserSetting
+import com.hazrat.prayertimes.screen.UserSettingViewModel
 
 @Composable
 fun AppNavigation() {
@@ -20,7 +21,8 @@ fun AppNavigation() {
             PrayerTimer(viewModel,navController)
         }
         composable(route = Route.UserSettings.route){
-            UserSetting(navController = navController)
+            val viewModel:UserSettingViewModel = hiltViewModel()
+            UserSetting(navController = navController, viewModel)
         }
     }
 

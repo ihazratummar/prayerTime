@@ -12,8 +12,10 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.hazrat.prayertimes.data.LocationDao
 import com.hazrat.prayertimes.data.LocationEntity
+import com.hazrat.prayertimes.data.MethodEntity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -87,4 +89,11 @@ class LocationRepository @Inject constructor(
     suspend fun getLocation(): LocationEntity? {
         return locationDao.getLocation()
     }
+
+
+
+
+
+
+
 }
