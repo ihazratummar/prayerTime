@@ -3,6 +3,7 @@
 package com.hazrat.prayertimes.di
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -28,7 +29,8 @@ object AppMModule {
 
     @Singleton
     @Provides
-    fun providePrayerTimeRepository(api: PrayerTimeApi,locationRepository: LocationRepository) = PrayerTimeRepository(api,locationRepository)
+    fun providePrayerTimeRepository(api: PrayerTimeApi,locationRepository: LocationRepository)
+    = PrayerTimeRepository(api,locationRepository)
 
     @Singleton
     @Provides
@@ -50,12 +52,6 @@ object AppMModule {
             "location_database"
         ).build()
     }
-
-//    @Singleton
-//    @Provides
-//    fun provideLocationDataHolder(): LocationDataHolder {
-//        return LocationDataHolder
-//    }
 
 
     @Provides

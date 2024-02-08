@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.hazrat.prayertimes.navigation.AppNavigation
 import com.hazrat.prayertimes.repository.LocationRepository
 import com.hazrat.prayertimes.screen.PrayerTimer
 import com.hazrat.prayertimes.ui.theme.PrayerTimesTheme
@@ -31,7 +32,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    PrayerTimer()
+                    AppNavigation()
                 }
             }
         }

@@ -29,44 +29,6 @@ class LocationRepository @Inject constructor(
 
     private var lastSavedLocation: Location? = null
 
-    init {
-        startLocationUpdates()
-    }
-
-    @SuppressLint("MissingPermission")
-    private fun startLocationUpdates() {
-        val locationRequest = LocationRequest.create().apply {
-            interval = 10000 // Update interval in milliseconds
-            fastestInterval = 5000 // Fastest update interval in milliseconds
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
-
-        val locationCallback = object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult) { // Add 'override' keyword here
-                locationResult.lastLocation?.let { location ->
-                    if (hasLocationChanged(location)) {
-                        CoroutineScope(Dispatchers.IO).launch {
-                            saveLocation(location.latitude, location.longitude)
-                        }
-                        _currentLocation.postValue(location)
-                    } else {
-                        Log.d("LocationRepository", "Location has not changed, skipping save.")
-                    }
-                }
-            }
-        }
-
-        fusedLocationClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            null /* Looper */
-        )
-    }
-
-    private fun hasLocationChanged(newLocation: Location): Boolean {
-        return lastSavedLocation == null || lastSavedLocation?.latitude != newLocation.latitude || lastSavedLocation?.longitude != newLocation.longitude
-    }
-
     suspend fun saveLocation(latitude: Double, longitude: Double) {
         val location = LocationEntity(latitude = latitude, longitude = longitude)
         Log.d("LocationRepository", "Location saved: ${location.latitude}, ${location.longitude}")
@@ -76,6 +38,51 @@ class LocationRepository @Inject constructor(
             this.longitude = longitude
         }
     }
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult) { // Add 'override' keyword here
+            locationResult.lastLocation?.let { location ->
+                if (hasLocationChanged(location)) {
+                    CoroutineScope(Dispatchers.IO).launch {
+                        saveLocation(location.latitude, location.longitude)
+                    }
+                    _currentLocation.postValue(location)
+                } else {
+                    Log.d("LocationRepository", "Location has not changed, skipping save.")
+                    stopLocationUpdates()
+                }
+            }
+        }
+    }
+
+    init {
+        startLocationUpdates()
+    }
+
+    @SuppressLint("MissingPermission")
+    private fun startLocationUpdates() {
+        val locationRequest = LocationRequest.create().apply {
+            interval = 1000 // Update interval in milliseconds
+            fastestInterval = 5000 // Fastest update interval in milliseconds
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+        fusedLocationClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            null /* Looper */
+        )
+    }
+
+    private fun stopLocationUpdates() {
+        // Remove location updates
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    private fun hasLocationChanged(newLocation: Location): Boolean {
+        return lastSavedLocation == null || lastSavedLocation?.latitude != newLocation.latitude || lastSavedLocation?.longitude != newLocation.longitude
+    }
+
+
 
     suspend fun getLocation(): LocationEntity? {
         return locationDao.getLocation()
