@@ -1,4 +1,4 @@
-package com.hazrat.prayertimes.data
+package com.hazrat.prayertimes.data.method
 
 import androidx.annotation.NonNull
 import androidx.room.ColumnInfo

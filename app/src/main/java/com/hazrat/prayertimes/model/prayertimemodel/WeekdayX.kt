@@ -1,4 +1,4 @@
-package com.hazrat.prayertimes.model
+package com.hazrat.prayertimes.model.prayertimemodel
 
 data class WeekdayX(
     val ar: String,

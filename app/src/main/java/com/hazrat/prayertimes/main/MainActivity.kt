@@ -8,8 +8,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.hazrat.prayertimes.navigation.AppNavigation
-import com.hazrat.prayertimes.repository.LocationRepository
-import com.hazrat.prayertimes.screen.PrayerTimer
+import com.hazrat.prayertimes.repository.location.LocationRepository
 import com.hazrat.prayertimes.ui.theme.PrayerTimesTheme
 import com.hazrat.prayertimes.util.LocationHandler
 import dagger.hilt.android.AndroidEntryPoint

@@ -105,10 +105,13 @@ dependencies {
     //Observe
     implementation ("androidx.activity:activity-compose:1.8.2")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.6.1")
 
     //Location
     implementation("com.google.android.gms:play-services-location:21.1.0")
+
+//    implementation ("androidx.lifecycle:lifecycle-livedata-compose:2.4.0-alpha02")
+    implementation("androidx.viewpager2:viewpager2:1.0.0")
 
 
 }

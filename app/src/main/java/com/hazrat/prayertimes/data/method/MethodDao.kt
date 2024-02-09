@@ -1,4 +1,4 @@
-package com.hazrat.prayertimes.data
+package com.hazrat.prayertimes.data.method
 
 import androidx.room.Dao
 import androidx.room.Delete

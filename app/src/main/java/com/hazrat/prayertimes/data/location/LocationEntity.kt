@@ -1,4 +1,4 @@
-package com.hazrat.prayertimes.data
+package com.hazrat.prayertimes.data.location
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

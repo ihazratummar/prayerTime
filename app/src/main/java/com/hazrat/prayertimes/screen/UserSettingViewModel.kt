@@ -3,9 +3,8 @@ package com.hazrat.prayertimes.screen
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hazrat.prayertimes.data.MethodEntity
+import com.hazrat.prayertimes.data.method.MethodEntity
 import com.hazrat.prayertimes.model.testmodel.MethodDetails
-import com.hazrat.prayertimes.repository.LocationRepository
 import com.hazrat.prayertimes.repository.MethodRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

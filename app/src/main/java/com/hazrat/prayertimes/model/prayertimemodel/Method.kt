@@ -1,4 +1,4 @@
-package com.hazrat.prayertimes.model
+package com.hazrat.prayertimes.model.prayertimemodel
 
 data class Method(
     val id: Int,

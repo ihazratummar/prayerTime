@@ -1,8 +1,4 @@
-package com.hazrat.prayertimes.model
-
-
-
-data class TimingsData(val timings: Timings, val dates: Date)
+package com.hazrat.prayertimes.model.prayertimemodel
 
 data class Timings(
     val Asr: String,

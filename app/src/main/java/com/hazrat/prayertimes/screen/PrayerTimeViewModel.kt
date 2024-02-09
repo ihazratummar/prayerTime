@@ -2,30 +2,36 @@
 
 package com.hazrat.prayertimes.screen
 
+
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hazrat.prayertimes.model.Timings
+import com.hazrat.prayertimes.model.prayertimemodel.ApiResponse
 import com.hazrat.prayertimes.repository.PrayerTimeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
-class PrayerTimeViewModel @Inject constructor(
-    private val repository: PrayerTimeRepository,
-) : ViewModel() {
-
-    private val _timings =MutableLiveData<Timings>()
-    val timings: LiveData<Timings> get() = _timings
+class PrayerTimeViewModel @Inject constructor (private val repository: PrayerTimeRepository) : ViewModel() {
 
 
-    init {
+    private var _prayerTimes = MutableLiveData<ApiResponse>()
+    val prayerTimes : LiveData<ApiResponse> get() = _prayerTimes
+
+    fun fetchPrayerTimes() {
         viewModelScope.launch {
-            _timings.value  = repository.getApiParameter().timings
+            val response = repository.getApiParameter()
+            _prayerTimes.value = response
         }
     }
 
+    init {
+        fetchPrayerTimes()
+        Log.d("GettingSomething", "${prayerTimes.value?.data}")
+    }
 }

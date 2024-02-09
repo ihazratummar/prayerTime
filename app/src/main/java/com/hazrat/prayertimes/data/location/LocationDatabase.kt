@@ -1,10 +1,7 @@
-package com.hazrat.prayertimes.data
+package com.hazrat.prayertimes.data.location
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-
 
 
 @Database(entities = [LocationEntity::class], version = 3, exportSchema = false)

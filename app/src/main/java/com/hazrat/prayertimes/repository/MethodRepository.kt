@@ -1,7 +1,7 @@
 package com.hazrat.prayertimes.repository
 
-import com.hazrat.prayertimes.data.MethodDao
-import com.hazrat.prayertimes.data.MethodEntity
+import com.hazrat.prayertimes.data.method.MethodDao
+import com.hazrat.prayertimes.data.method.MethodEntity
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

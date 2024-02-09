@@ -21,7 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.hazrat.prayertimes.data.MethodEntity
+import com.hazrat.prayertimes.data.method.MethodEntity
 import com.hazrat.prayertimes.model.testmodel.MethodDetails
 import com.hazrat.prayertimes.screen.component.MethodSelectionDialog
 
@@ -73,7 +73,6 @@ fun UserSetting(
 //                methods = methodDetails,
                 showMethodSelectionDialog = showMethodSelectionDialog,
                 onMethodSelected = { method ->
-                    settingViewModel.deleteAllMethod()
                     selectedMethod = method
                     settingViewModel.insertMethod(MethodEntity(method.method))
                     showMethodSelectionDialog = false // Close the dialog after selection

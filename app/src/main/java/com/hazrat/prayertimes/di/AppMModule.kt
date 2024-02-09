@@ -3,16 +3,15 @@
 package com.hazrat.prayertimes.di
 
 import android.content.Context
-import androidx.lifecycle.SavedStateHandle
 import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.hazrat.prayertimes.data.LocationDao
-import com.hazrat.prayertimes.data.LocationDatabase
-import com.hazrat.prayertimes.data.MethodDao
-import com.hazrat.prayertimes.data.MethodDatabase
+import com.hazrat.prayertimes.data.location.LocationDao
+import com.hazrat.prayertimes.data.location.LocationDatabase
+import com.hazrat.prayertimes.data.method.MethodDao
+import com.hazrat.prayertimes.data.method.MethodDatabase
 import com.hazrat.prayertimes.network.PrayerTimeApi
-import com.hazrat.prayertimes.repository.LocationRepository
+import com.hazrat.prayertimes.repository.location.LocationRepository
 import com.hazrat.prayertimes.repository.MethodRepository
 import com.hazrat.prayertimes.repository.PrayerTimeRepository
 import com.hazrat.prayertimes.util.Constants.BASE_URL
@@ -59,7 +58,7 @@ object AppMModule {
 
     @Singleton
     @Provides
-    fun provideMethodDatabase(@ApplicationContext context: Context): MethodDatabase{
+    fun provideMethodDatabase(@ApplicationContext context: Context): MethodDatabase {
         return Room.databaseBuilder(
             context.applicationContext,
             MethodDatabase::class.java,
