@@ -53,16 +53,23 @@ fun PrayerTimer(viewModel: PrayerTimeViewModel = hiltViewModel(), navController:
 @Composable
 fun ShowData(viewModel: PrayerTimeViewModel = hiltViewModel(), navController: NavController) {
 
+    val locationName by viewModel.locationName.observeAsState()
+
     val prayerTimes by viewModel.prayerTimes.observeAsState()
 
     LaunchedEffect(viewModel.prayerTimes) {
         viewModel.fetchPrayerTimes()
+
+    }
+    LaunchedEffect(Unit){
+        viewModel.fetchLocationName()
+        locationName?.let { Log.d("LocationName", it) }
     }
 
     Scaffold(
         modifier = Modifier,
         topBar = {
-            TopAppBar(title = {},
+            TopAppBar(title = { Text(text = "$locationName")},
                 actions = {
                     Icon(imageVector = Icons.Default.Settings,
                         contentDescription = "Setting Icon",

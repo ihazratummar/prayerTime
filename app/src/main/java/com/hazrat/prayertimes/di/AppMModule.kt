@@ -6,15 +6,18 @@ import android.content.Context
 import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.hazrat.prayertimes.data.location.LocationDao
-import com.hazrat.prayertimes.data.location.LocationDatabase
+import com.hazrat.prayertimes.data.location.coordinents.LocationDao
+import com.hazrat.prayertimes.data.location.coordinents.LocationDatabase
 import com.hazrat.prayertimes.data.method.MethodDao
 import com.hazrat.prayertimes.data.method.MethodDatabase
+import com.hazrat.prayertimes.network.LocationNameApi
 import com.hazrat.prayertimes.network.PrayerTimeApi
 import com.hazrat.prayertimes.repository.location.LocationRepository
 import com.hazrat.prayertimes.repository.MethodRepository
 import com.hazrat.prayertimes.repository.PrayerTimeRepository
+import com.hazrat.prayertimes.repository.location.LocationNameRepository
 import com.hazrat.prayertimes.util.Constants.BASE_URL
+import com.hazrat.prayertimes.util.Constants.LOCATION_BASE_URL
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +46,25 @@ object AppMModule {
             .build()
             .create(PrayerTimeApi::class.java)
     }
+
+
+    //LocationApi
+    @Singleton
+    @Provides
+    fun provideLocationNameApi(): LocationNameApi{
+        return Retrofit.Builder()
+            .baseUrl(LOCATION_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+            .create(LocationNameApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLocationNameRepository(api: LocationNameApi,locationRepository: LocationRepository): LocationNameRepository {
+        return LocationNameRepository(api,locationRepository)
+    }
+
 
 
     @Singleton

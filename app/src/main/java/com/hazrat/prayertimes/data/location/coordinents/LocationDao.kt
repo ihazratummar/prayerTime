@@ -1,4 +1,4 @@
-package com.hazrat.prayertimes.data.location
+package com.hazrat.prayertimes.data.location.coordinents
 
 import androidx.room.Dao
 import androidx.room.Insert

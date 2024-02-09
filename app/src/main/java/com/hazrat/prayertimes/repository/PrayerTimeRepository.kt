@@ -4,9 +4,8 @@ package com.hazrat.prayertimes.repository
 
 
 import android.util.Log
-import com.hazrat.prayertimes.data.location.LocationEntity
+import com.hazrat.prayertimes.data.location.coordinents.LocationEntity
 import com.hazrat.prayertimes.model.prayertimemodel.ApiResponse
-import com.hazrat.prayertimes.model.prayertimemodel.Timings
 import com.hazrat.prayertimes.network.PrayerTimeApi
 import com.hazrat.prayertimes.repository.location.LocationRepository
 import com.hazrat.prayertimes.util.DateUtil
