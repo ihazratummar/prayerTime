@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.viewinterop.AndroidView
@@ -35,8 +36,12 @@ import androidx.navigation.NavController
 import androidx.viewpager2.widget.ViewPager2
 import com.hazrat.prayertimes.model.prayertimemodel.Data
 import com.hazrat.prayertimes.navigation.Route
+import com.hazrat.prayertimes.screen.component.DisplayTimeUntilPrayer
+import com.hazrat.prayertimes.screen.component.getTime
 import com.hazrat.prayertimes.util.DateUtil
 import kotlinx.coroutines.flow.collectLatest
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun PrayerTimer(viewModel: PrayerTimeViewModel = hiltViewModel(), navController: NavController) {
@@ -79,18 +84,6 @@ fun ShowData(viewModel: PrayerTimeViewModel = hiltViewModel(), navController: Na
 }
 
 @OptIn(ExperimentalFoundationApi::class)
-//@Composable
-//fun ViewPager(prayerTimes: List<Data>) {
-//    LazyColumn(
-//        modifier = Modifier.fillMaxSize()
-//    ) {
-//        items(prayerTimes) { data ->
-//            PrayerTimesDay(data = data)
-//        }
-//    }
-//}
-
-
 @Composable
 fun ViewPager(prayerTimes: List<Data>) {
 
@@ -130,21 +123,19 @@ fun PrayerTimesDay(data: Data) {
         Text(text = data.date.readable)
         Text(text = "Hijri: ${data.date.hijri.month.en} ${data.date.hijri.day},${data.date.hijri.year} ${data.date.hijri.designation.abbreviated}")
         Text(text = data.meta.method.name)
-        // Display each prayer time
-        // You can adjust this part according to your UI design
         Text(text = "Fajr: ${getTime(data.timings.Fajr)}")
         Text(text = "Dhuhr: ${getTime(data.timings.Dhuhr)}")
         Text(text = "Asr: ${getTime(data.timings.Asr)}")
         Text(text = "Maghrib: ${getTime(data.timings.Maghrib)}")
         Text(text = "Isha: ${getTime(data.timings.Isha)}")
+
+        DisplayTimeUntilPrayer(data)
     }
-    // Display prayer times for a single day
-    // Add more prayer times as needed
 }
 
-private fun getTime(prayerTime: String): String {
-    // Assume prayerTime format is "HH:mm (time zone)"
-    return prayerTime.substring(0, 5) // Extract HH:mm part
-}
+
+
+
+
 
 
