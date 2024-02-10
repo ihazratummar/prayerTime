@@ -3,13 +3,17 @@
 package com.hazrat.prayertimes.di
 
 import android.content.Context
+import android.util.Log
 import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.hazrat.prayertimes.data.location.coordinents.LocationDao
 import com.hazrat.prayertimes.data.location.coordinents.LocationDatabase
+import com.hazrat.prayertimes.data.location.locationdetails.LocationNameDao
 import com.hazrat.prayertimes.data.method.MethodDao
 import com.hazrat.prayertimes.data.method.MethodDatabase
+import com.hazrat.prayertimes.data.prayerdetails.AppDatabase
+import com.hazrat.prayertimes.data.prayerdetails.PrayerTimeDao
 import com.hazrat.prayertimes.network.LocationNameApi
 import com.hazrat.prayertimes.network.PrayerTimeApi
 import com.hazrat.prayertimes.repository.location.LocationRepository
@@ -34,8 +38,33 @@ object AppMModule {
 
     @Singleton
     @Provides
-    fun providePrayerTimeRepository(api: PrayerTimeApi, locationRepository: LocationRepository, methodRepository: MethodRepository) =
-        PrayerTimeRepository(api, locationRepository, methodRepository)
+    fun providePrayerTimeRepository(
+        api: PrayerTimeApi,
+        locationRepository: LocationRepository,
+        methodRepository: MethodRepository,
+        prayerTimeDao: PrayerTimeDao
+    ) =
+        PrayerTimeRepository(api, locationRepository, methodRepository, prayerTimeDao)
+
+
+//    /prayer time
+    @Provides
+    @Singleton
+    fun provideAppDatabase(@ApplicationContext context: Context): AppDatabase {
+        Log.d("AppDatabase", "Creating database instance")
+        return Room.databaseBuilder(
+            context.applicationContext,
+            AppDatabase::class.java,
+            "app-database"
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    fun providePrayerTimeDao(appDatabase: AppDatabase): PrayerTimeDao {
+        return appDatabase.prayerTimeDao()
+    }
+
 
     @Singleton
     @Provides
@@ -51,7 +80,7 @@ object AppMModule {
     //LocationApi
     @Singleton
     @Provides
-    fun provideLocationNameApi(): LocationNameApi{
+    fun provideLocationNameApi(): LocationNameApi {
         return Retrofit.Builder()
             .baseUrl(LOCATION_BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
@@ -61,10 +90,19 @@ object AppMModule {
 
     @Provides
     @Singleton
-    fun provideLocationNameRepository(api: LocationNameApi,locationRepository: LocationRepository): LocationNameRepository {
-        return LocationNameRepository(api,locationRepository)
+    fun provideLocationNameRepository(
+        api: LocationNameApi,
+        locationRepository: LocationRepository,
+        locationNameDao: LocationNameDao
+    ): LocationNameRepository {
+        return LocationNameRepository(api, locationRepository, locationNameDao)
     }
 
+    @Singleton
+    @Provides
+    fun provideLocationNameDao(locationDatabase: LocationDatabase): LocationNameDao {
+        return locationDatabase.locationNameDao()
+    }
 
 
     @Singleton
@@ -85,7 +123,8 @@ object AppMModule {
             context.applicationContext,
             MethodDatabase::class.java,
             "method_database"
-        ).build()
+        ).fallbackToDestructiveMigration()
+            .build()
     }
 
 
@@ -120,7 +159,7 @@ object AppMModule {
     @Provides
     fun provideMethodRepository(
         methodDao: MethodDao
-    ): MethodRepository{
+    ): MethodRepository {
         return MethodRepository(methodDao)
     }
 

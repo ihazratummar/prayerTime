@@ -2,21 +2,22 @@ package com.hazrat.prayertimes.screen.component
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import com.hazrat.prayertimes.data.prayerdetails.PrayerTimeEntity
 import com.hazrat.prayertimes.model.prayertimemodel.Data
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
 @Composable
-fun DisplayTimeUntilPrayer(data: Data) {
+fun DisplayTimeUntilPrayer(data: PrayerTimeEntity) {
     val currentTime = LocalTime.now()
 
     val prayerTimes = listOf(
-        "Fajr" to data.timings.Fajr,
-        "Dhuhr" to data.timings.Dhuhr,
-        "Asr" to data.timings.Asr,
-        "Maghrib" to data.timings.Maghrib,
-        "Isha" to data.timings.Isha
+        "Fajr" to data.fajrTime,
+        "Dhuhr" to data.dhuhrTime,
+        "Asr" to data.asrTime,
+        "Maghrib" to data.maghribTime,
+        "Isha" to data.ishaTime
     )
 
     var nextPrayerTime: LocalTime? = null

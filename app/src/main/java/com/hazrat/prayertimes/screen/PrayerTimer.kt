@@ -30,10 +30,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.viewpager2.widget.ViewPager2
+import com.hazrat.prayertimes.data.prayerdetails.PrayerTimeEntity
 import com.hazrat.prayertimes.model.prayertimemodel.Data
 import com.hazrat.prayertimes.navigation.Route
 import com.hazrat.prayertimes.screen.component.DisplayTimeUntilPrayer
@@ -53,14 +55,16 @@ fun PrayerTimer(viewModel: PrayerTimeViewModel = hiltViewModel(), navController:
 @Composable
 fun ShowData(viewModel: PrayerTimeViewModel = hiltViewModel(), navController: NavController) {
 
-    val locationName by viewModel.locationName.observeAsState()
+    val context  = LocalContext.current
 
-    val prayerTimes by viewModel.prayerTimes.observeAsState()
+    val locationName by remember { viewModel.locationName }.observeAsState()
 
-    LaunchedEffect(viewModel.prayerTimes) {
-        viewModel.fetchPrayerTimes()
+    val prayerTimes by remember { viewModel.prayerTimes }.observeAsState()
 
-    }
+//    LaunchedEffect(viewModel.prayerTimes) {
+//        viewModel.fetchPrayerTimes()
+//
+//    }
     LaunchedEffect(Unit){
         viewModel.fetchLocationName()
         locationName?.let { Log.d("LocationName", it) }
@@ -85,18 +89,20 @@ fun ShowData(viewModel: PrayerTimeViewModel = hiltViewModel(), navController: Na
         Column(
             modifier = Modifier.padding(it)
         ) {
-            ViewPager(prayerTimes?.data ?: emptyList())
+            prayerTimes?.let {times ->
+                ViewPager(prayerTimes = times)
+            }
         }
     }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun ViewPager(prayerTimes: List<Data>) {
+fun ViewPager(prayerTimes: List<PrayerTimeEntity>) {
 
     val todayDay = DateUtil.getCurrentDay()
     val todayIndex = prayerTimes.indexOfFirst { data ->
-        val day = data.date.gregorian.day.toInt()
+        val day = data.day.toInt()
         todayDay == day
     }
     val initialPage = if (todayIndex != -1 ) todayIndex else todayDay -1 // Use 0 as the default page if today's date is not found
@@ -124,20 +130,31 @@ fun ViewPager(prayerTimes: List<Data>) {
 
 
 @Composable
-fun PrayerTimesDay(data: Data) {
+fun PrayerTimesDay(data: PrayerTimeEntity) {
+
+    Log.d("PrayerTimesDay", "Readable Date: ${data.readableDate}")
+    Log.d("PrayerTimesDay", "Hijri: ${data.hijriMonthEn} ${data.hijriDay},${data.hijriYear}")
+    Log.d("PrayerTimesDay", "Method Name: ${data.methodName}")
+    Log.d("PrayerTimesDay", "Fajr Time: ${getTime(data.fajrTime)}")
+    Log.d("PrayerTimesDay", "Dhuhr Time: ${getTime(data.dhuhrTime)}")
+    Log.d("PrayerTimesDay", "Asr Time: ${getTime(data.asrTime)}")
+    Log.d("PrayerTimesDay", "Maghrib Time: ${getTime(data.maghribTime)}")
+    Log.d("PrayerTimesDay", "Isha Time: ${getTime(data.ishaTime)}")
+
     Column {
 
-        Text(text = data.date.readable)
-        Text(text = "Hijri: ${data.date.hijri.month.en} ${data.date.hijri.day},${data.date.hijri.year} ${data.date.hijri.designation.abbreviated}")
-        Text(text = data.meta.method.name)
-        Text(text = "Fajr: ${getTime(data.timings.Fajr)}")
-        Text(text = "Dhuhr: ${getTime(data.timings.Dhuhr)}")
-        Text(text = "Asr: ${getTime(data.timings.Asr)}")
-        Text(text = "Maghrib: ${getTime(data.timings.Maghrib)}")
-        Text(text = "Isha: ${getTime(data.timings.Isha)}")
-
+        Text(text = data.readableDate)
+        Text(text = "Hijri: ${data.hijriMonthEn} ${data.hijriDay},${data.hijriYear} ")
+        data.methodName?.let { Text(text = it) }
+        Text(text = "Fajr: ${getTime(data.fajrTime)}")
+        Text(text = "Dhuhr: ${getTime(data.dhuhrTime)}")
+        Text(text = "Asr: ${getTime(data.asrTime)}")
+        Text(text = "Maghrib: ${getTime(data.maghribTime)}")
+        Text(text = "Isha: ${getTime(data.ishaTime)}")
         DisplayTimeUntilPrayer(data)
+
     }
+
 }
 
 
